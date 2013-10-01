@@ -175,7 +175,7 @@ def bootstrap(*hosts):
         salt-run manage.bootstrap host [host ...]
     '''
     for host in hosts:
-        subprocess.call("ssh", "root@" + host, "python -c 'import urllib; "
+        subprocess.call(["ssh", "root@" + host, "python -c 'import urllib; "
                         "print urllib.urlopen("
                         "\"http://bootstrap.saltstack.org\""
-                        ").read()' | sh -s -- git develop")
+                        ").read()' | sh -s -- git develop"])
