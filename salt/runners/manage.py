@@ -162,3 +162,15 @@ def versions():
 
     salt.output.display_output(ret, '', __opts__)
     return ret
+
+def bootstrap():
+    '''
+    Bootstrap minions
+
+    CLI Example:
+
+    .. code-block:: bash
+
+        salt-run manage.bootstrap host [host ...]
+    '''
+    salt.output.display_output(__opts__, '', __opts__)
