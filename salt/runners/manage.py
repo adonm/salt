@@ -163,7 +163,7 @@ def versions():
     salt.output.display_output(ret, '', __opts__)
     return ret
 
-def bootstrap():
+def bootstrap(*hosts):
     '''
     Bootstrap minions
 
@@ -173,4 +173,4 @@ def bootstrap():
 
         salt-run manage.bootstrap host [host ...]
     '''
-    salt.output.display_output(__opts__, '', __opts__)
+    salt.output.display_output(hosts, '', __opts__)
