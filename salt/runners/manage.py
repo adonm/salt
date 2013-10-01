@@ -6,6 +6,7 @@ and what hosts are down
 
 # Import python libs
 import os
+import subprocess
 
 # Import salt libs
 import salt.key
@@ -165,7 +166,7 @@ def versions():
 
 def bootstrap(*hosts):
     '''
-    Bootstrap minions
+    Bootstrap minions with salt-bootstrap
 
     CLI Example:
 
@@ -173,4 +174,8 @@ def bootstrap(*hosts):
 
         salt-run manage.bootstrap host [host ...]
     '''
-    salt.output.display_output(hosts, '', __opts__)
+    for host in hosts:
+        subprocess.call("ssh", "root@" + host, "python -c 'import urllib; "
+                        "print urllib.urlopen("
+                        "\"http://bootstrap.saltstack.org\""
+                        ").read()' | sh -s -- git develop")
