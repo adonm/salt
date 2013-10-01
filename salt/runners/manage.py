@@ -165,16 +165,16 @@ def versions():
     return ret
 
 
-def bootstrap(
-        git_version="develop",
-        script="http://bootstrap.saltstack.org",
-        *hosts):
+def bootstrap(version="develop",
+              script="http://bootstrap.saltstack.org",
+              hosts=""):
     '''
     Bootstrap minions with salt-bootstrap
 
     Options:
-        git_version: git tag of version to install [default: develop]
+        version: git tag of version to install [default: develop]
         script: Script to execute [default: http://bootstrap.saltstack.org]
+        hosts: Comma separated hosts
 
     CLI Example:
 
@@ -182,8 +182,8 @@ def bootstrap(
 
         salt-run manage.bootstrap host [host ...]
     '''
-    for host in hosts:
+    for host in hosts.split(","):
         subprocess.call(["ssh", "root@" + host, "python -c 'import urllib; "
                         "print urllib.urlopen("
                         "\"" + script + "\""
-                        ").read()' | sh -s -- git " + git_version])
+                        ").read()' | sh -s -- git " + version])
