@@ -89,19 +89,19 @@ def key_regen():
 def down(removekeys=False):
     '''
     Print a list of all the down or unresponsive salt minions
-    Remove keys of down minions
+    Optionally remove keys of down minions
 
     CLI Example:
 
     .. code-block:: bash
 
         salt-run manage.down
+        salt-run manage.down removekeys=True
     '''
     ret = status(output=False).get('down', [])
     for minion in ret:
         if removekeys:
             subprocess.call(["salt-key", "-qyd", minion])
-            salt.output.display_output(minion, 'Removed', __opts__)
         else:
             salt.output.display_output(minion, '', __opts__)
     return ret
@@ -179,15 +179,21 @@ def bootstrap(version="develop",
     Options:
         version: git tag of version to install [default: develop]
         script: Script to execute [default: http://bootstrap.saltstack.org]
-        hosts: Comma separated hosts
+        hosts: Comma separated hosts [example: hosts="host1.local,host2.local"]
 
     CLI Example:
 
     .. code-block:: bash
 
-        salt-run manage.bootstrap host [host ...]
+        salt-run manage.bootstrap hosts="host1,host2"
+        salt-run manage.bootstrap hosts="host1,host2" version="v0.17"
+        salt-run manage.bootstrap hosts="host1,host2" version="v0.17" script="https://raw.github.com/saltstack/salt-bootstrap/develop/bootstrap-salt.sh"
+
     '''
     for host in hosts.split(","):
+        # Could potentially lean on salt-ssh utils to make
+        # deployment easier on existing hosts (i.e. use sshpass,
+        # or expect, pass better options to ssh etc)
         subprocess.call(["ssh", "root@" + host, "python -c 'import urllib; "
                         "print urllib.urlopen("
                         "\"" + script + "\""
