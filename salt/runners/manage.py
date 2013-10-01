@@ -86,9 +86,10 @@ def key_regen():
     print(msg)
 
 
-def down():
+def down(removekeys=False):
     '''
     Print a list of all the down or unresponsive salt minions
+    Remove keys of down minions
 
     CLI Example:
 
@@ -98,7 +99,11 @@ def down():
     '''
     ret = status(output=False).get('down', [])
     for minion in ret:
-        salt.output.display_output(minion, '', __opts__)
+        if removekeys:
+            subprocess.call(["salt-key", "-qyd", minion])
+            salt.output.display_output(minion, 'Removed', __opts__)
+        else:
+            salt.output.display_output(minion, '', __opts__)
     return ret
 
 
